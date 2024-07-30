@@ -57,6 +57,19 @@ function Card({ item }) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+    try {
+      await apiRequest.delete(`/posts/${item.id}`);
+      navigate("/profile"); // Refresh to reflect changes
+    } catch (err) {
+      console.error("Error deleting post:", err);
+    }
+  };
+
   //  const handleDelete = async () => {
   //   if (!currentUser) {
   //     navigate("/login");
@@ -100,6 +113,7 @@ function Card({ item }) {
             </div>
           </div>
           <div className="icons">
+            
            <button className="icon" onClick={handleSave}
            style={{
             backgroundColor: saved ? "#fece51" : "white",
@@ -111,9 +125,11 @@ function Card({ item }) {
            <button className="icon" onClick={handleSendMessage}>
            <img src="/chat.png" alt="" />
            </button>
-           <button className="icon" >
-           <img src="/delete.png" alt="Delete" />
-           </button>
+           {currentUser && currentUser.id === item.userId && (
+              <button className="icon">
+                <img src="/delete.png" alt="Delete" onClick={handleDelete}/>
+              </button>
+            )}
             
           </div>
         </div>
